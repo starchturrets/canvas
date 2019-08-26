@@ -15,12 +15,12 @@ class PILLARS {
 
   width: number;
 
-  constructor(ctx: CanvasRenderingContext2D) {
+  constructor(ctx: CanvasRenderingContext2D, left: number) {
     this.ctx = ctx;
     this.dl = -3;
     this.height = Math.floor(Math.random() * (200 - 50 + 1) + 50);
-    this.width = 10;
-    this.distanceFromLeft = canvas.width - this.width;
+    this.width = 17;
+    this.distanceFromLeft = left;
   }
 
   draw = () => {
@@ -44,7 +44,7 @@ class GAME {
 
   player: PLAYER;
 
-  pillars: PILLARS;
+  pillars: PILLARS[];
 
   height: number;
 
@@ -54,8 +54,11 @@ class GAME {
 
   constructor(ctx: CanvasRenderingContext2D) {
     this.ctx = ctx;
-    this.player = new PLAYER(context, 10, 10, 12);
-    this.pillars = new PILLARS(context);
+    this.player = new PLAYER(context, 120, 10, 12);
+    this.pillars = [];
+    for (let i = 0; i < 8; i += 1) {
+      this.pillars.push(new PILLARS(context, i * 50));
+    }
     this.height = canvas.height;
     this.width = canvas.width;
     this.gameOver = false;
@@ -72,7 +75,7 @@ class GAME {
     context.clearRect(0, 0, width, height);
 
     this.player.draw();
-    this.pillars.draw();
+    this.pillars.forEach((p: PILLARS) => p.draw());
 
     this.collisionDetection();
     if (!gameOver) requestAnimationFrame(this.loop);
@@ -89,17 +92,28 @@ class GAME {
     ) {
       player.dy = 0;
     }
-    // Move pillars to the right if they hit the edge
-    if (pillars.distanceFromLeft < 0) {
-      this.pillars = new PILLARS(this.ctx);
-      pillars.distanceFromLeft = canvas.width;
-    }
-    if (
-      pillars.distanceFromLeft < player.distanceFromLeft + player.size &&
-      player.distanceFromTop + player.size > canvas.height - pillars.height
-    ) {
-      this.gameOver = true;
-    }
+    // Since there are multiple pillars, loop over them individually
+    pillars.forEach((pillar: PILLARS, index: number) => {
+      const totalHeight = player.distanceFromTop + player.size;
+      // Move pillars to the right if they hit the edge
+      if (pillar.distanceFromLeft + pillar.width < 0) {
+        this.pillars[index] = new PILLARS(this.ctx, canvas.width);
+        pillars[index].distanceFromLeft = canvas.width;
+      }
+      if (totalHeight === canvas.height - pillar.height) {
+        if (
+          pillar.distanceFromLeft + pillar.width ===
+          player.distanceFromLeft
+        ) {
+          this.gameOver = true;
+        }
+      } else if (
+        totalHeight >= canvas.height - pillar.height &&
+        pillar.distanceFromLeft + pillar.width > player.distanceFromLeft
+      ) {
+        this.gameOver = true;
+      }
+    });
   };
 }
 
