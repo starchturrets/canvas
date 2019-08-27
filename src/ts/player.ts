@@ -9,12 +9,7 @@ export default class PLAYER {
 
   dy: number;
 
-  constructor(
-    ctx: CanvasRenderingContext2D,
-    distanceFromLeft: number,
-    distanceFromTop: number,
-    size: number,
-  ) {
+  constructor(ctx: CanvasRenderingContext2D, distanceFromLeft: number, distanceFromTop: number, size: number) {
     this.ctx = ctx;
     this.dy = 3;
     this.distanceFromLeft = distanceFromLeft;

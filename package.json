@@ -23,6 +23,6 @@
   "prettier": {
     "singleQuote": true,
     "trailingComma": "all",
-    "printWidth": 1200
+    "printWidth": 120
   }
 }

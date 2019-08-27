@@ -58,7 +58,7 @@ class GAME {
                     }
                 }
                 else if (totalHeight >= canvas.height - pillar.height &&
-                    pillar.distanceFromLeft + pillar.width > player.distanceFromLeft) {
+                    pillar.distanceFromLeft + pillar.width < player.distanceFromLeft) {
                     this.gameOver = true;
                 }
             });

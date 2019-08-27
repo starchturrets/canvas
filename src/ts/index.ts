@@ -26,12 +26,7 @@ class PILLARS {
   draw = () => {
     const { ctx, width, height } = this;
     this.ctx.beginPath();
-    this.ctx.rect(
-      this.distanceFromLeft,
-      canvas.height - height,
-      this.width,
-      this.height,
-    );
+    this.ctx.rect(this.distanceFromLeft, canvas.height - height, this.width, this.height);
     ctx.fillStyle = 'blue';
     ctx.fill();
     ctx.closePath();
@@ -74,8 +69,8 @@ class GAME {
     const { height, width, gameOver } = this;
     context.clearRect(0, 0, width, height);
 
-    this.player.draw();
     this.pillars.forEach((p: PILLARS) => p.draw());
+    this.player.draw();
 
     this.collisionDetection();
     if (!gameOver) requestAnimationFrame(this.loop);
@@ -92,7 +87,7 @@ class GAME {
     ) {
       player.dy = 0;
     }
-    // Since there are multiple pillars, loop over them individually
+    // Since there are multiple pillars, loop over them individually and check collisions
     pillars.forEach((pillar: PILLARS, index: number) => {
       const totalHeight = player.distanceFromTop + player.size;
       // Move pillars to the right if they hit the edge
@@ -100,18 +95,21 @@ class GAME {
         this.pillars[index] = new PILLARS(this.ctx, canvas.width);
         pillars[index].distanceFromLeft = canvas.width;
       }
-      if (totalHeight === canvas.height - pillar.height) {
+      console.log(canvas.height - pillar.height < player.distanceFromTop);
+      if (
+        canvas.height - pillar.height < player.distanceFromTop &&
+        pillar.distanceFromLeft < player.size + player.distanceFromLeft &&
+        pillar.distanceFromLeft > player.distanceFromLeft
+      ) {
+        this.gameOver = true;
+      }
+      if (canvas.height - pillar.height <= player.size + player.distanceFromTop) {
         if (
-          pillar.distanceFromLeft + pillar.width ===
-          player.distanceFromLeft
+          pillar.distanceFromLeft <= player.distanceFromLeft + player.size &&
+          pillar.distanceFromLeft >= player.distanceFromLeft - player.size
         ) {
           this.gameOver = true;
         }
-      } else if (
-        totalHeight >= canvas.height - pillar.height &&
-        pillar.distanceFromLeft + pillar.width > player.distanceFromLeft
-      ) {
-        this.gameOver = true;
       }
     });
   };

@@ -1,4 +1,4 @@
-"use strict";
+'use strict'
 // let x = 10;
 // let y = canvas.height / 2 - 30;
 // let dx = 0;
@@ -63,4 +63,4 @@
 // };
 // // int = setInterval(draw, 1);
 // requestAnimationFrame(draw);
-//# sourceMappingURL=old.js.map
+// # sourceMappingURL=old.js.map
