@@ -31,6 +31,11 @@ canvas {
   display: block;
   /* height: 32rem; */
   margin: 1rem auto;
+  user-select: none;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -moz-user-focus: none !important;
+  padding: 0;
   /* width: 40rem; */
 }
 

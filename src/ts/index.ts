@@ -3,4 +3,4 @@ import GAME from './game';
 const canvas = document.querySelector('#canvas') as HTMLCanvasElement;
 
 const game = new GAME(canvas);
-game.init();
+canvas.addEventListener('click', game.init, { once: true });
