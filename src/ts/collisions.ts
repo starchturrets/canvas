@@ -10,11 +10,14 @@ class COLLISIONS {
 
   gameOver!: boolean;
 
-  constructor(canvas: HTMLCanvasElement, player: PLAYER, pillars: PILLARS[]) {
+  score: number;
+
+  constructor(canvas: HTMLCanvasElement, player: PLAYER, pillars: PILLARS[], score: number) {
     this.canvas = canvas;
     this.player = player;
     this.pillars = pillars;
     this.gameOver = false;
+    this.score = score;
   }
 
   check = () => {
@@ -28,13 +31,33 @@ class COLLISIONS {
         this.pillars.splice(index, 1);
         this.pillars.push(new PILLARS(this.canvas, this.canvas.width));
       }
-      //   if (player.x === obstacle.distanceFromLeft) this.gameOver = true;
-      //   if (player.y === obstacle.safeHeight) this.gameOver = true;
-      // if(this.collidesLeft(obstacle) && player ){
-      //     this.gameOver = true;
-      // }      //   if (player.distanceFromLeft === obstacle.distanceFromLeft && player.distanceFromTop > obstacle.safeHeight) {
-      //     this.gameOver = true;
-      //   }
+      if (player.x === obstacle.distanceFromLeft) {
+        // eslint-disable-next-line no-param-reassign
+        obstacle.counted = true;
+        this.score += 1;
+      }
+      //   Check if player is inside the space between pillars
+      if (!obstacle.isSafe(player.y, player.distanceFromTop)) {
+        // Then check if player is hitting said pillars
+        switch (true) {
+          case player.distanceFromLeft === obstacle.distanceFromLeft && obstacle.counted === false: {
+            // eslint-disable-next-line no-param-reassign
+            obstacle.counted = true;
+            this.score += 1;
+            break;
+          }
+          case player.distanceFromLeft <= obstacle.x && player.x >= obstacle.x:
+          case player.x <= obstacle.x && player.x >= obstacle.distanceFromLeft:
+          case player.x === obstacle.distanceFromLeft: {
+            this.gameOver = true;
+            break;
+          }
+
+          default:
+            break;
+        }
+        // if (player.x > obstacle.distanceFromLeft) this.score += 1;
+      }
     });
   };
 
@@ -45,6 +68,7 @@ class COLLISIONS {
     } else if (player.distanceFromTop < 0) {
       this.player.dy = 0;
       setTimeout(() => {
+        // Do this because otherwise the player gets stuck on the top of the canvas
         this.player.dy = 1.2;
       }, 5);
     }

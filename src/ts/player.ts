@@ -38,7 +38,7 @@ export default class PLAYER {
   };
 
   jump = () => {
-    this.dy = -3;
+    this.dy = -2;
     setTimeout(() => {
       this.dy = 1.2;
     }, 300);

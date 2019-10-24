@@ -43,3 +43,9 @@ img {
   height: auto;
   max-width: 100%;
 }
+.score {
+  margin: 1rem auto;
+  max-width: 32rem;
+  font: monospace 2rem;
+  font-weight: bold;
+}

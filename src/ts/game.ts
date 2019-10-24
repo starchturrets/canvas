@@ -17,6 +17,8 @@ export default class {
 
   score: number = 0;
 
+  paused: boolean;
+
   constructor(_canvas: HTMLCanvasElement) {
     this.canvas = _canvas;
     this.ctx = this.canvas.getContext('2d')!;
@@ -25,6 +27,7 @@ export default class {
     for (let i = 0; i < 6; i += 1) {
       this.pillars.push(new PILLARS(this.canvas, this.canvas.width + i * 69));
     }
+    this.paused = false;
     this.height = _canvas.height;
     this.width = _canvas.width;
   }
@@ -42,49 +45,18 @@ export default class {
 
     this.pillars.forEach((p: PILLARS) => p.draw());
     this.player.draw();
-    const checker = new COLLISIONS(this.canvas, this.player, this.pillars);
+    const checker = new COLLISIONS(this.canvas, this.player, this.pillars, this.score);
     checker.check();
-    if (checker.gameOver === false) requestAnimationFrame(this.loop);
+    this.score = checker.score;
+    if (checker.gameOver === false && this.paused === false) {
+      requestAnimationFrame(this.loop);
+      document.querySelector('#score')!.textContent = `Score is: ${checker.score}`;
+    }
   };
 
-  collisionDetection = () => {
-    const { player, pillars } = this;
-
-    // Since there are multiple pillars, loop over them individually and check collisions
-    pillars.forEach((pillar: PILLARS, index: number) => {
-      // console.log(player.distanceFromLeft, pilla.)
-      // if (
-      //   pillar.distanceFromLeft - pillar.width === player.distanceFromLeft &&
-      //   player.distanceFromLeft + player.size <= pillar.distanceFromLeft &&
-      //   pillar.distanceFromLeft >= player.distanceFromLeft
-      // ) {
-      // if (player.distanceFromTop + player.size >= pillar.safeHeight) this.gameOver = true;
-      // }
-      // Destroy pillars if they hit the edge, then replace them
-      if (pillar.distanceFromLeft + pillar.width < 0) {
-        this.pillars.splice(index, 1);
-        this.pillars.push(new PILLARS(this.canvas, this.canvas.width));
-      }
-      // if (
-      //   this.canvas.height - pillar.height === player.distanceFromTop &&
-      //   pillar.distanceFromLeft < player.size + player.distanceFromLeft &&
-      //   pillar.distanceFromLeft > player.distanceFromLeft
-      // ) {
-      //   this.gameOver = true;
-      // }
-      // if (this.canvas.height - pillar.height <= player.size + player.distanceFromTop) {
-      //   if (
-      //     pillar.distanceFromLeft <= player.distanceFromLeft + player.size &&
-      //     pillar.distanceFromLeft >= player.distanceFromLeft - player.size
-      //   ) {
-      //     this.gameOver = true;
-      //   }
-      // }
-      // if (pillar.distanceFromLeft === 10) {
-      //   const scoreDiv = document.querySelector('div#score') as HTMLElement;
-      //   this.score += 1;
-      //   scoreDiv!.textContent = `Score is: ${this.score}`;
-      // }
-    });
+  pause = (ev: Event) => {
+    const target = ev.target as Element;
+    this.paused = true;
+    target.textContent = 'Resume Game';
   };
 }
