@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "parcel serve src/index.html --open",
-    "deploy": "push-dir --dir=./dist --branch=master"
+    "deploy": "push-dir --dir=./dist --branch=master",
+    "build": "parcel build ./src/index.html"
   },
   "keywords": [],
   "author": "",
