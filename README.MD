@@ -2,4 +2,4 @@
 
 It's an extremely simple clone of flappy bird, but with worse graphics.
 
-Hoested [here.](https://starchturrets.github.io/canvas/)
+Hosted [here.](https://silly-rosalind-4221c4.netlify.com/)
