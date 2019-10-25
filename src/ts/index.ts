@@ -2,8 +2,13 @@ import GAME from './game';
 
 const canvas = document.querySelector('#canvas') as HTMLCanvasElement;
 const container = document.querySelector('.container') as Element;
-const game = new GAME(canvas);
-canvas.addEventListener('click', game.init, { once: true });
+let game = new GAME(canvas);
+canvas.addEventListener('click', () => {
+  if (game.gameOver === true) {
+    game = new GAME(canvas);
+    game.init();
+  }
+});
 // const score = document.querySelector('button') as Element;
 // score.addEventListener(
 //   'click',

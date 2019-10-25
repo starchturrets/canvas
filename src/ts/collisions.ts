@@ -12,12 +12,17 @@ class COLLISIONS {
 
   score: number;
 
+  highScore: number;
+
   constructor(canvas: HTMLCanvasElement, player: PLAYER, pillars: PILLARS[], score: number) {
     this.canvas = canvas;
     this.player = player;
     this.pillars = pillars;
     this.gameOver = false;
     this.score = score;
+    this.highScore = localStorage.score || 0;
+    this.highScore = this.score > this.highScore ? this.score : this.highScore;
+    localStorage.score = this.highScore;
   }
 
   check = () => {
@@ -31,7 +36,7 @@ class COLLISIONS {
         this.pillars.splice(index, 1);
         this.pillars.push(new PILLARS(this.canvas, this.canvas.width));
       }
-      if (player.x === obstacle.distanceFromLeft) {
+      if (player.x > obstacle.x && obstacle.counted === false) {
         // eslint-disable-next-line no-param-reassign
         obstacle.counted = true;
         this.score += 1;
@@ -40,7 +45,7 @@ class COLLISIONS {
       if (!obstacle.isSafe(player.y, player.distanceFromTop)) {
         // Then check if player is hitting said pillars
         switch (true) {
-          case player.distanceFromLeft === obstacle.distanceFromLeft && obstacle.counted === false: {
+          case player.x > obstacle.distanceFromLeft && obstacle.counted === false: {
             // eslint-disable-next-line no-param-reassign
             obstacle.counted = true;
             this.score += 1;
@@ -65,7 +70,7 @@ class COLLISIONS {
     // If the square is at the top of the canvas, go no further
     if (player.y > canvas.height) {
       this.player.dy = 0;
-    } else if (player.distanceFromTop < 0) {
+    } else if (player.distanceFromTop < 25) {
       this.player.dy = 0;
       setTimeout(() => {
         // Do this because otherwise the player gets stuck on the top of the canvas

@@ -19,17 +19,19 @@ class PILLARS {
 
   counted: boolean;
 
+  fillStyle: string;
+
   constructor(_canvas: HTMLCanvasElement, left: number) {
     this.canvas = _canvas;
     this.ctx = _canvas.getContext('2d')!;
-    this.dl = -1;
-    this.height = Math.floor(Math.random() * 160 + 50);
-    this.secondPillarHeight = this.canvas.height - this.height - 155;
+    this.dl = -this.canvas.width / 400;
+    this.height = Math.floor((Math.random() * this.canvas.height) / 4 + 50);
+    this.secondPillarHeight = this.canvas.height - this.height - this.canvas.height / 4;
 
     this.counted = false;
-
+    this.fillStyle = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
     this.safeHeight = this.canvas.height - this.height;
-    this.width = 20;
+    this.width = this.canvas.width / 14;
     this.distanceFromLeft = left;
     this.x = this.width + this.distanceFromLeft;
   }
@@ -39,10 +41,10 @@ class PILLARS {
     this.ctx.beginPath();
     this.distanceFromLeft += this.dl;
     this.ctx.rect(this.distanceFromLeft, this.canvas.height - height, width, height);
-    ctx.fillStyle = 'blue';
+    ctx.fillStyle = this.fillStyle;
     ctx.fill();
     this.ctx.rect(this.distanceFromLeft, 0, width, this.secondPillarHeight);
-    ctx.fillStyle = 'blue';
+    ctx.fillStyle = this.fillStyle;
     ctx.fill();
     ctx.closePath();
     this.x = this.width + this.distanceFromLeft;
